@@ -44,7 +44,14 @@ LEARNING      ->  Not to rely too much on AI
 [###############-----]  75%  model convergence
 [####################] 100%  ready to ship
 ```
-
+</td>
+<td valign="center" width="45%" align="center">
+ 
+<img src="https://media.giphy.com/media/gWDJWMJVemkKH8tljp/giphy.gif" alt="coding gif" width="100%" style="border-radius:8px" />
+ 
+</td>
+</tr>
+</table>
 ---
 
 <div align="center">
