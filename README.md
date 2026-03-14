@@ -76,32 +76,12 @@ LEARNING      ->  Not to rely too much on AI
 
 ---
 
-### ACHIEVEMENTS
-
-<div align="center">
-
-[![trophy](https://github-profile-trophy.vercel.app/?username=JoanR112&theme=matrix&no-frame=true&column=7&margin-w=8)](https://github.com/JoanR112)
-
-</div>
-
----
-
 ### GITHUB STATS
 
 <div align="center">
 
 <img height="160" src="https://github-readme-stats.vercel.app/api?username=JoanR112&show_icons=true&theme=chartreuse-dark&bg_color=0d1117&hide_border=true&title_color=00ff88&icon_color=00ff88&text_color=aaffcc&ring_color=00ff88" />
 <img height="160" src="https://github-readme-stats.vercel.app/api/top-langs/?username=JoanR112&layout=compact&theme=chartreuse-dark&bg_color=0d1117&hide_border=true&title_color=00ff88&text_color=aaffcc" />
-
-</div>
-
----
-
-### CONTRIBUTION GRAPH
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/JoanR112/JoanR112/output/github-contribution-grid-snake-dark.svg" alt="snake eating commits" />
 
 </div>
 
