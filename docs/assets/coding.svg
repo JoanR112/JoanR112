@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Animated coding banner">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0d1117"/>
+      <stop offset="100%" stop-color="#03130d"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <g stroke="#00ff88" stroke-opacity="0.2">
+    <path d="M0 80h800M0 140h800M0 200h800M0 260h800M0 320h800M0 380h800"/>
+    <path d="M120 0v450M240 0v450M360 0v450M480 0v450M600 0v450M720 0v450"/>
+  </g>
+  <rect x="110" y="120" width="580" height="220" rx="16" fill="#050b08" stroke="#00ff88" stroke-opacity="0.5"/>
+  <text x="145" y="185" fill="#aaffcc" font-family="JetBrains Mono, monospace" font-size="30">$ training_model --dataset clean_data_v3</text>
+  <text x="145" y="235" fill="#00ff88" font-family="JetBrains Mono, monospace" font-size="28" filter="url(#glow)">Epoch: <tspan id="epoch">01</tspan> / 10</text>
+  <rect x="145" y="265" width="510" height="24" rx="12" fill="#0d1117" stroke="#00ff88"/>
+  <rect x="147" y="267" width="0" height="20" rx="10" fill="#00ff88">
+    <animate attributeName="width" values="0;506;0" dur="4s" repeatCount="indefinite"/>
+  </rect>
+  <text x="145" y="325" fill="#aaffcc" font-family="JetBrains Mono, monospace" font-size="24">Status: optimizing reasoning pathways...</text>
+  <circle cx="680" cy="90" r="5" fill="#00ff88">
+    <animate attributeName="opacity" values="1;0.2;1" dur="1.1s" repeatCount="indefinite"/>
+  </circle>
+  <script><![CDATA[
+    const epochs=['01','02','03','04','05','06','07','08','09','10'];
+    let i=0;
+    setInterval(()=>{
+      const el=document.getElementById('epoch');
+      if(el){el.textContent=epochs[i%epochs.length];}
+      i++;
+    },400);
+  ]]></script>
+</svg>
