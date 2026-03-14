@@ -92,6 +92,7 @@
 </head>
 <body>
 <canvas id="gl"></canvas>
+<pre id="fallback" style="display:none;position:absolute;inset:0;margin:auto;max-width:760px;height:max-content;color:#00ff88;padding:16px;font-family:monospace;line-height:1.5;text-align:center;">Loading banner...</pre>
 <div class="scanline"></div>
 <div class="vignette"></div>
 <div class="overlay">
@@ -100,11 +101,21 @@
 </div>
 <script>
 const canvas = document.getElementById("gl");
-const gl = canvas.getContext("webgl");
-if (!gl) {
-  document.body.innerHTML = "<pre style='color:#00ff88;padding:16px;font-family:monospace'>WebGL not supported.</pre>";
-  throw new Error("WebGL not supported");
+const fallback = document.getElementById("fallback");
+let gl = canvas.getContext("webgl");
+
+function showFallback(message) {
+  canvas.style.display = "none";
+  if (fallback) {
+    fallback.style.display = "block";
+    fallback.textContent = message;
+  }
 }
+
+if (!gl) {
+  showFallback("WebGL is not available in this browser. Please open this page in a WebGL-enabled browser.");
+}
+
 const vertexSource = `
 attribute vec2 a_position;
 void main() {
@@ -161,34 +172,44 @@ function createProgram(vs, fs) {
   if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
   return p;
 }
-const program = createProgram(vertexSource, fragmentSource);
-const buf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-const aPos = gl.getAttribLocation(program, "a_position");
-const uRes = gl.getUniformLocation(program, "resolution");
-const uTime = gl.getUniformLocation(program, "time");
-let startTime = null;
-function resize() {
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  const w = Math.floor(window.innerWidth * dpr);
-  const h = Math.floor(window.innerHeight * dpr);
-  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-  gl.viewport(0, 0, canvas.width, canvas.height);
+if (gl) {
+  try {
+    const program = createProgram(vertexSource, fragmentSource);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(program, "a_position");
+    const uRes = gl.getUniformLocation(program, "resolution");
+    const uTime = gl.getUniformLocation(program, "time");
+    let startTime = null;
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.floor(window.innerWidth * dpr);
+      const h = Math.floor(window.innerHeight * dpr);
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    }
+
+    function render(ms) {
+      if (!startTime) startTime = ms;
+      resize();
+      gl.useProgram(program);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.enableVertexAttribArray(aPos);
+      gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, (ms - startTime) * 0.001);
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  } catch (error) {
+    showFallback("Banner shader failed to initialize. Try reloading or using a modern browser.");
+    console.error(error);
+  }
 }
-function render(ms) {
-  if (!startTime) startTime = ms;
-  resize();
-  gl.useProgram(program);
-  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-  gl.enableVertexAttribArray(aPos);
-  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-  gl.uniform2f(uRes, canvas.width, canvas.height);
-  gl.uniform1f(uTime, (ms - startTime) * 0.001);
-  gl.drawArrays(gl.TRIANGLES, 0, 6);
-  requestAnimationFrame(render);
-}
-requestAnimationFrame(render);
 </script>
 </body>
 </html>

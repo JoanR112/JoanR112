@@ -1,10 +1,7 @@
 <div align="center">
-<a href="https://joanr112.github.io/JoanR112/banner.html">
-  <img
-    src="https://capsule-render.vercel.app/api?type=waving&color=0:0d0d0d,50:00ff88,100:0d0d0d&height=180&section=header&text=JoanR112&fontSize=60&fontColor=00ff88&fontAlignY=40&desc=ML%20Engineer%20%7C%20AI%20Architect%20%7C%20Systems%20Thinker&descAlignY=62&descSize=16&descColor=aaffcc&animation=fadeIn"
-    alt="JoanR112 banner"
-    width="100%"
-  />
+
+<a href="https://joanr112.github.io/JoanR112/banner.html" target="_blank">
+  <img src="https://img.shields.io/badge/Open-Live%20WebGL%20Banner-00ff88?style=for-the-badge&logo=github" alt="Open live banner website" />
 </a>
 
 <br/>
@@ -22,6 +19,10 @@
 
 ---
 
+<table>
+<tr>
+<td valign="top" width="55%">
+
 ```python
 class JoanR112:
     name      = "Joan"
@@ -35,8 +36,6 @@ class JoanR112:
     ]
 ```
 
----
-
 ```
 CURRENT_TASK  ->  Building an AI model that doesn't output slop without needing an H200
 LEARNING      ->  Not to rely too much on AI
@@ -44,14 +43,16 @@ LEARNING      ->  Not to rely too much on AI
 [###############-----]  75%  model convergence
 [####################] 100%  ready to ship
 ```
+
 </td>
 <td valign="center" width="45%" align="center">
- 
-<img src="https://media.giphy.com/media/gWDJWMJVemkKH8tljp/giphy.gif" alt="coding gif" width="100%" style="border-radius:8px" />
- 
+
+<img src="https://i.giphy.com/gWDJWMJVemkKH8tljp.gif" alt="coding gif" width="100%" style="border-radius:8px" />
+
 </td>
 </tr>
 </table>
+
 ---
 
 <div align="center">
@@ -99,11 +100,3 @@ LEARNING      ->  Not to rely too much on AI
 - [ ] Release full open-source training data, code and model weights of my AI model
 - [ ] Reach 50 GitHub stars across repos
 - [ ] Not get replaced by AI
-
----
-
-<div align="center">
-
-![footer](https://capsule-render.vercel.app/api?type=waving&color=0:0d0d0d,50:00ff88,100:0d0d0d&height=80&section=footer)
-
-</div>
