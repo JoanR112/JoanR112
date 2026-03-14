@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Joan R.</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .name {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: clamp(22px, 5vw, 52px);
+      font-weight: 700;
+      color: #00ff88;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 40px rgba(0,255,136,0.35);
+      opacity: 0;
+      animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s forwards;
+    }
+    .desc {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: clamp(9px, 1.4vw, 14px);
+      font-weight: 400;
+      color: #aaffcc;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s forwards;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: #00ff88;
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+    .scanline {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 80% 120% at 50% 50%,
+        transparent 40%,
+        rgba(0,0,0,0.55) 100%
+      );
+      pointer-events: none;
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div class="scanline"></div>
+<div class="vignette"></div>
+<div class="overlay">
+  <div class="name">Joan R.<span class="cursor"></span></div>
+  <div class="desc">ML Engineer &nbsp;|&nbsp; AI Creator &nbsp;|&nbsp; Lego Fan</div>
+</div>
+<script>
+const canvas = document.getElementById("gl");
+const gl = canvas.getContext("webgl");
+if (!gl) {
+  document.body.innerHTML = "<pre style='color:#00ff88;padding:16px;font-family:monospace'>WebGL not supported.</pre>";
+  throw new Error("WebGL not supported");
+}
+const vertexSource = `
+attribute vec2 a_position;
+void main() {
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}
+`;
+const fragmentSource = `
+precision highp float;
+uniform vec2 resolution;
+uniform float time;
+float tanhApprox(float x) {
+  float e2x = exp(clamp(2.0 * x, -10.0, 10.0));
+  return (e2x - 1.0) / (e2x + 1.0);
+}
+vec4 tanhApprox4(vec4 v) {
+  return vec4(tanhApprox(v.x), tanhApprox(v.y), tanhApprox(v.z), tanhApprox(v.w));
+}
+void main() {
+  vec2 fc = gl_FragCoord.xy;
+  vec2 uv = (fc * 2.0 - resolution) / resolution.y;
+  vec4 o = vec4(0.0);
+  float z = 0.0;
+  for (float i = 1.0; i <= 20.0; i += 1.0) {
+    vec3 ray = normalize(vec3(uv, 1.0));
+    vec3 p = z * ray;
+    p = vec3(
+      atan(p.y / 0.2, p.x) * 2.0,
+      p.z / 3.0,
+      length(p.xy) - 5.0 - z * 0.2
+    );
+    for (float dWave = 1.0; dWave < 7.0; dWave += 1.0) {
+      p += sin(p.yzx * dWave + time * 0.6 + 0.3 * i) / dWave;
+    }
+    float d = length(vec4(0.4 * cos(p) - 0.4, p.z));
+    z += d;
+    o += (cos(p.x + i * 0.4 + z + vec4(6.0, 1.0, 2.0, 0.0)) + 1.0) / max(d, 0.001);
+  }
+  o = tanhApprox4(o * o / 400.0);
+  gl_FragColor = vec4(o.rgb, 1.0);
+}
+`;
+function createShader(type, source) {
+  const s = gl.createShader(type);
+  gl.shaderSource(s, source);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+  return s;
+}
+function createProgram(vs, fs) {
+  const p = gl.createProgram();
+  gl.attachShader(p, createShader(gl.VERTEX_SHADER, vs));
+  gl.attachShader(p, createShader(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(p);
+  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  return p;
+}
+const program = createProgram(vertexSource, fragmentSource);
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(program, "a_position");
+const uRes = gl.getUniformLocation(program, "resolution");
+const uTime = gl.getUniformLocation(program, "time");
+let startTime = null;
+function resize() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = Math.floor(window.innerWidth * dpr);
+  const h = Math.floor(window.innerHeight * dpr);
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  gl.viewport(0, 0, canvas.width, canvas.height);
+}
+function render(ms) {
+  if (!startTime) startTime = ms;
+  resize();
+  gl.useProgram(program);
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+  gl.uniform2f(uRes, canvas.width, canvas.height);
+  gl.uniform1f(uTime, (ms - startTime) * 0.001);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
+</script>
+</body>
+</html>
