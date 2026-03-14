@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://joanr112.github.io/JoanR112/" target="_blank">
+<a href="https://joanr112.github.io/JoanR112/banner.html" target="_blank">
   <img src="https://img.shields.io/badge/Open-Live%20WebGL%20Banner-00ff88?style=for-the-badge&logo=github" alt="Open live banner website" />
 </a>
 
@@ -47,7 +47,7 @@ LEARNING      ->  Not to rely too much on AI
 </td>
 <td valign="center" width="45%" align="center">
 
-<img src="docs/assets/coding.svg" alt="animated coding card" width="100%" style="border-radius:8px" />
+<img src="https://i.giphy.com/gWDJWMJVemkKH8tljp.gif" alt="coding gif" width="100%" style="border-radius:8px" />
 
 </td>
 </tr>
