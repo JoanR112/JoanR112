@@ -77,13 +77,6 @@ LEARNING      ->  Not to rely too much on AI
 
 ---
 
-### FEATURED PROJECTS
-
-- [`Self-trained 20M parameter model on a MacBook Air`](https://github.com/JoanR112/TinyAI)
-- [`Self-built Codex CLI / Claude Code alternative`](https://github.com/JoanR112/Agentrun2.1)
-
----
-
 ### GITHUB STATS
 
 <div align="center">
